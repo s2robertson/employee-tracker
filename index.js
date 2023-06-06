@@ -7,6 +7,7 @@ require('dotenv').config();
     // await db.readDepartments();
     // await db.readRoles();
     // await db.readEmployees();
-    await db.insertDepartment('Service');
+    // await db.insertDepartment('Service');
+    await db.insertRole('Customer Service', '80000', 5);
     await db.close();
 })()

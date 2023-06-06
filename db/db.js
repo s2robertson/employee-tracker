@@ -30,6 +30,12 @@ module.exports = (async function() {
             console.log(rs.toString());
         },
 
+        async insertRole(title, salary, departmentId) {
+            const query = 'INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)';
+            const [result] = await conn.execute(query, [title, salary, departmentId]);
+            return result.affectedRows > 0;
+        },
+
         async readEmployees() {
             const query = 'SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary, '
                 + 'CONCAT(manager.first_name, " ", manager.last_name) AS manager FROM employee e '
