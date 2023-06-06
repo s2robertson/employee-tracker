@@ -1,6 +1,15 @@
 require('dotenv').config();
 const inquirer = require('inquirer');
 
+function stringNotEmptyValidator(errMsg) {
+    return function validator(value) {
+        if (value == undefined || value == null || value.trim().length == 0) {
+            return errMsg;
+        }
+        return true;
+    }
+}
+
 (async function() {
     const db = await require('./db/db');
 
@@ -19,12 +28,7 @@ const inquirer = require('inquirer');
             name: 'name',
             message: 'What is the name of the department?',
             type: 'input',
-            validator: function(value) {
-                if (value == undefined || value == null || value.trim().length == 0) {
-                    return 'Department name is required';
-                }
-                return true;
-            }
+            validator: stringNotEmptyValidator('Department name is required')
         }];
 
         const { name } = await inquirer.prompt(addDeptPrompt);
@@ -34,6 +38,38 @@ const inquirer = require('inquirer');
     async function viewRoles() {
         const roles = await db.readRoles();
         console.log(roles.toString());
+    }
+
+    const salaryNotEmptyValidator = stringNotEmptyValidator('Role salary is required');
+    async function addRole() {
+        const departments = await db.readDepartments();
+        const departmentChoices = departments.getIdMapping();
+        const addRolePrompt = [{
+            name: 'title',
+            message: 'What is the name of the role?',
+            type: 'input',
+            validator: stringNotEmptyValidator('Role name is required')
+        }, {
+            name: 'salary',
+            message: 'What is the salary of the role?',
+            type: 'input',
+            validator: function(value) {
+                const notEmptyCheck = salaryNotEmptyValidator(value);
+                if (notEmptyCheck !== true) {
+                    return notEmptyCheck;
+                }
+                const reCheck = /^\d{1, 10}$/.test(value.trim());
+                return reCheck || 'Salary must be 1-10 digits, with no spaces';
+            }
+        }, {
+            name: 'departmentId',
+            message: 'What department does the role belong to?',
+            type: 'list',
+            choices: departmentChoices
+        }];
+
+        const { title, salary, departmentId } = await inquirer.prompt(addRolePrompt);
+        return db.insertRole(title, salary, departmentId);
     }
 
     async function viewEmployees() {
@@ -51,6 +87,9 @@ const inquirer = require('inquirer');
         }, {
             name: 'View All Roles',
             value: viewRoles
+        }, {
+            name: 'Add Role',
+            value: addRole
         }, {
             name: 'View All Departments',
             value: viewDepartments

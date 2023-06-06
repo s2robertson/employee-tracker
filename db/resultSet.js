@@ -40,4 +40,13 @@ class ResultSet {
     }
 }
 
-module.exports = ResultSet;
+class DepartmentResultSet extends ResultSet {
+    getIdMapping() {
+        return this.rows.map(row => ({
+            name: row.name,
+            value: row.id
+        }));
+    }
+}
+
+module.exports = { ResultSet, DepartmentResultSet };
