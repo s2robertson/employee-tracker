@@ -95,6 +95,20 @@ function stringNotEmptyValidator(errMsg) {
         console.log(employees.toString());
     }
 
+    async function viewEmployeesByDepartment() {
+        const departments = (await db.readDepartments()).getNameIdMapping();
+        const viewEmployeesByDepartmentPrompt = [{
+            name: 'departmentId',
+            message: 'View Employees From Department:',
+            type: 'list',
+            choices: departments
+        }];
+
+        const options = await inquirer.prompt(viewEmployeesByDepartmentPrompt);
+        const employees = await db.readEmployees(options);
+        console.log(employees.toString());
+    }
+
     async function addEmployee() {
         const rolesP = db.readRoles();
         const managersP = db.readEmployees();
@@ -193,6 +207,9 @@ function stringNotEmptyValidator(errMsg) {
         }, {
             name: 'View Employees By Manager',
             value: viewEmployeesByManager
+        }, {
+            name: 'View Employees By Department',
+            value: viewEmployeesByDepartment
         }, {
             name: 'View All Roles',
             value: viewRoles
