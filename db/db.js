@@ -47,6 +47,12 @@ module.exports = (async function() {
             console.log(rs.toString());
         },
 
+        async insertEmployee(firstName, lastName, roleId, managerId) {
+            const query = 'INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)';
+            const [result] = await conn.execute(query, [firstName, lastName, roleId, managerId]);
+            return result.affectedRows > 0;
+        },
+
         close() {
             return conn.end();
         }
