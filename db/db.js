@@ -45,6 +45,15 @@ module.exports = (async function() {
             return result.affectedRows > 0;
         },
 
+        async deleteRole(roleId) {
+            try {
+                const [result] = await conn.execute('DELETE FROM role WHERE id = ?', [roleId]);
+                return result.affectedRows > 0;
+            } catch (err) {
+                return false;
+            }
+        },
+
         async readEmployees({ departmentId, managerId } = {}) {
             let whereClause = '';
             let params = [];

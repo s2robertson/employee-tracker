@@ -12,7 +12,8 @@ const inquirer = require('inquirer');
     
     const {
         viewRoles,
-        addRole
+        addRole,
+        deleteRole
     } = require('./cli/roles');
 
     const {
@@ -57,6 +58,9 @@ const inquirer = require('inquirer');
         }, {
             name: 'Add Role',
             value: addRole
+        }, {
+            name: 'Delete Role',
+            value: deleteRole
         }, {
             name: 'View All Departments',
             value: viewDepartments

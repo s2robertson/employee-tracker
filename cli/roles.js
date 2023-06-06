@@ -37,7 +37,26 @@ async function addRole(db) {
     return db.insertRole(title, salary, departmentId);
 }
 
+async function deleteRole(db) {
+    const roles = (await db.readRoles()).getNameIdMapping();
+    const deleteRolePrompt = [{
+        name: 'roleId',
+        message: 'Delete which department?',
+        type: 'list',
+        choices: roles
+    }];
+
+    const { roleId } = await inquirer.prompt(deleteRolePrompt);
+    const wasDeleted = await db.deleteRole(roleId);
+    if (wasDeleted) {
+        console.log('Role deleted');
+    } else {
+        console.log('Role could not be deleted.  Are there employees assigned to it?');
+    }
+}
+
 module.exports = {
     viewRoles,
-    addRole
+    addRole,
+    deleteRole
 }
