@@ -35,6 +35,7 @@ module.exports = (async function() {
             const query = 'SELECT SUM(r.salary) AS total FROM role r INNER JOIN employee e ON e.role_id = r.id '
                 + 'INNER JOIN department d ON r.department_id = d.id WHERE d.id = ?';
             const [rows] = await conn.execute(query, [deptId]);
+            // if no employees match the query, it will still return a row with total = null
             if (rows.length > 0 && rows[0].total !== null) {
                 return rows[0].total;
             }
@@ -60,6 +61,7 @@ module.exports = (async function() {
                 const [result] = await conn.execute('DELETE FROM role WHERE id = ?', [roleId]);
                 return result.affectedRows > 0;
             } catch (err) {
+                // the query throws if the role is actively being used by employees
                 return false;
             }
         },
@@ -91,6 +93,13 @@ module.exports = (async function() {
                 + 'INNER JOIN department d ON r.department_id = d.id'
                 + whereClause;
             const [rows, fields] = await conn.execute(query, params);
+            const rs = new EmployeeResultSet(rows, fields);
+            return rs;
+        },
+
+        async readEmployeeNames() {
+            const query = 'SELECT id, first_name, last_name FROM employee';
+            const [rows, fields] = await conn.query(query);
             const rs = new EmployeeResultSet(rows, fields);
             return rs;
         },

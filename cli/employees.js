@@ -7,7 +7,7 @@ async function viewEmployees(db) {
 }
 
 async function viewEmployeesByManager(db) {
-    const managers = (await db.readEmployees()).getNameIdMapping();
+    const managers = (await db.readEmployeeNames()).getNameIdMapping();
     // search for employees with no manager
     managers.unshift({
         name: 'None',
@@ -41,7 +41,7 @@ async function viewEmployeesByDepartment(db) {
 
 async function addEmployee(db) {
     const rolesP = db.readRoles();
-    const managersP = db.readEmployees();
+    const managersP = db.readEmployeeNames();
     const [roles, managers] = (await Promise.all([rolesP, managersP])).map(rs => rs.getNameIdMapping());
     // allow no manager
     managers.unshift({
@@ -75,7 +75,7 @@ async function addEmployee(db) {
 }
 
 async function updateEmployeeRole(db) {
-    const employeesP = db.readEmployees();
+    const employeesP = db.readEmployeeNames();
     const rolesP = db.readRoles();
     const [employees, roles] = (await Promise.all([employeesP, rolesP])).map(rs => rs.getNameIdMapping());
     const updateEmployeeRolePrompt = [{
@@ -95,7 +95,7 @@ async function updateEmployeeRole(db) {
 }
 
 async function updateEmployeeManager(db) {
-    const employees = (await db.readEmployees()).getNameIdMapping();
+    const employees = (await db.readEmployeeNames()).getNameIdMapping();
     const updateEmployeeManagerPrompt = [{
         name: 'employeeId',
         message: 'Which employee\'s manager do you want to update?',
@@ -119,7 +119,7 @@ async function updateEmployeeManager(db) {
 }
 
 async function deleteEmployee(db) {
-    const employees = (await db.readEmployees()).getNameIdMapping();
+    const employees = (await db.readEmployeeNames()).getNameIdMapping();
     const deleteEmployeePrompt = [{
         name: 'employeeId',
         message: 'Delete which employee?',
