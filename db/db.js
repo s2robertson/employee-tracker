@@ -1,5 +1,5 @@
 const mysql = require('mysql2/promise');
-const { ResultSet, DepartmentResultSet } = require('./resultSet');
+const { DepartmentResultSet, RoleResultSet, EmployeeResultSet } = require('./resultSet');
 
 module.exports = (async function() {
     const conn = await mysql.createConnection({
@@ -26,7 +26,7 @@ module.exports = (async function() {
             const query = 'SELECT r.id, r.title, d.name AS department, r.salary FROM role r '
                 + 'INNER JOIN department d ON r.department_id = d.id'
             const [rows, fields] = await conn.query(query);
-            const rs = new ResultSet(rows, fields);
+            const rs = new RoleResultSet(rows, fields);
             return rs;
         },
 
@@ -43,7 +43,7 @@ module.exports = (async function() {
                 + 'INNER JOIN role r ON e.role_id = r.id '
                 + 'INNER JOIN department d ON r.department_id = d.id';
             const [rows, fields] = await conn.query(query);
-            const rs = new ResultSet(rows, fields);
+            const rs = new EmployeeResultSet(rows, fields);
             return rs;
         },
 

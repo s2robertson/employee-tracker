@@ -41,7 +41,7 @@ class ResultSet {
 }
 
 class DepartmentResultSet extends ResultSet {
-    getIdMapping() {
+    getNameIdMapping() {
         return this.rows.map(row => ({
             name: row.name,
             value: row.id
@@ -49,4 +49,22 @@ class DepartmentResultSet extends ResultSet {
     }
 }
 
-module.exports = { ResultSet, DepartmentResultSet };
+class RoleResultSet extends ResultSet {
+    getNameIdMapping() {
+        return this.rows.map(row => ({
+            name: row.title,
+            value: row.id
+        }))
+    }
+}
+
+class EmployeeResultSet extends ResultSet {
+    getNameIdMapping() {
+        return this.rows.map(row => ({
+            name: row.first_name + ' ' + row.last_name,
+            value: row.id
+        }));
+    }
+}
+
+module.exports = { DepartmentResultSet, RoleResultSet, EmployeeResultSet };

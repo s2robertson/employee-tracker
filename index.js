@@ -43,7 +43,7 @@ function stringNotEmptyValidator(errMsg) {
     const salaryNotEmptyValidator = stringNotEmptyValidator('Role salary is required');
     async function addRole() {
         const departments = await db.readDepartments();
-        const departmentChoices = departments.getIdMapping();
+        const departmentChoices = departments.getNameIdMapping();
         const addRolePrompt = [{
             name: 'title',
             message: 'What is the name of the role?',
