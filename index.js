@@ -42,8 +42,7 @@ function stringNotEmptyValidator(errMsg) {
 
     const salaryNotEmptyValidator = stringNotEmptyValidator('Role salary is required');
     async function addRole() {
-        const departments = await db.readDepartments();
-        const departmentChoices = departments.getNameIdMapping();
+        const departments = (await db.readDepartments()).getNameIdMapping();
         const addRolePrompt = [{
             name: 'title',
             message: 'What is the name of the role?',
@@ -65,7 +64,7 @@ function stringNotEmptyValidator(errMsg) {
             name: 'departmentId',
             message: 'What department does the role belong to?',
             type: 'list',
-            choices: departmentChoices
+            choices: departments
         }];
 
         const { title, salary, departmentId } = await inquirer.prompt(addRolePrompt);
@@ -77,6 +76,41 @@ function stringNotEmptyValidator(errMsg) {
         console.log(employees.toString());
     }
 
+    async function addEmployee() {
+        const rolesP = db.readRoles();
+        const managersP = db.readEmployees();
+        const [roles, managers] = (await Promise.all([rolesP, managersP])).map(rs => rs.getNameIdMapping());
+        // allow no manager
+        managers.unshift({
+            name: 'None',
+            value: null
+        });
+        const addEmployeePrompt = [{
+            name: 'firstName',
+            message: 'What is the employee\'s first name?',
+            type: 'input',
+            validator: stringNotEmptyValidator('First name is required')
+        }, {
+            name: 'lastName',
+            message: 'What is the employee\'s last name?',
+            type: 'input',
+            validator: stringNotEmptyValidator('Last name is required')
+        }, {
+            name: 'roleId',
+            message: 'What is the employee\'s role?',
+            type: 'list',
+            choices: roles
+        }, {
+            name: 'managerId',
+            message: 'Who is the employee\'s manager?',
+            type: 'list',
+            choices: managers
+        }];
+
+        const { firstName, lastName, roleId, managerId } = await inquirer.prompt(addEmployeePrompt);
+        return db.insertEmployee(firstName, lastName, roleId, managerId);
+    }
+
     const basePrompt = [{
         name: 'choice',
         message: 'What would you like to do?',
@@ -84,6 +118,9 @@ function stringNotEmptyValidator(errMsg) {
         choices: [{
             name: 'View All Employees',
             value: viewEmployees
+        }, {
+            name: 'Add Employee',
+            value: addEmployee
         }, {
             name: 'View All Roles',
             value: viewRoles
