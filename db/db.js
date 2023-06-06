@@ -25,7 +25,9 @@ module.exports = (async function() {
         },
 
         async readEmployees() {
-            const query = 'SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary FROM employee e '
+            const query = 'SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary, '
+                + 'CONCAT(manager.first_name, " ", manager.last_name) AS manager FROM employee e '
+                + 'LEFT JOIN employee manager ON e.manager_id = manager.id '
                 + 'INNER JOIN role r ON e.role_id = r.id '
                 + 'INNER JOIN department d ON r.department_id = d.id';
             const [rows, fields] = await conn.query(query);
