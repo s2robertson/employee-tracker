@@ -27,13 +27,14 @@ class ResultSet {
         for (const field of this.fields) {
             result += '-'.repeat(field.maxLength) + '  ';
         }
+        result += '\n';
         // rows
         for (const row of this.rows) {
-            result += '\n';
             for (const field of this.fields) {
                 const fieldStr = row[field.name] === null ? 'null' : row[field.name].toString();
                 result += fieldStr.padEnd(field.maxLength + 2);
             }
+            result += '\n';
         }
         return result;
     }
