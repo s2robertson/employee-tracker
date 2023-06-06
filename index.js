@@ -131,6 +131,30 @@ function stringNotEmptyValidator(errMsg) {
         return db.updateEmployeeRole(employeeId, roleId);
     }
 
+    async function updateEmployeeManager() {
+        const employees = (await db.readEmployees()).getNameIdMapping();
+        const updateEmployeeManagerPrompt = [{
+            name: 'employeeId',
+            message: 'Which employee\'s manager do you want to update?',
+            type: 'list',
+            choices: employees
+        }, {
+            name: 'managerId',
+            message: 'Who should be the selected employee\'s manager?',
+            type: 'list',
+            choices: function(values) {
+                return [{
+                    name: 'None',
+                    value: null
+                },
+                ...employees.filter(employee => employee.value !== values.employeeId)];
+            }
+        }];
+
+        const { employeeId, managerId } = await inquirer.prompt(updateEmployeeManagerPrompt);
+        return db.updateEmployeeManager(employeeId, managerId);
+    }
+
     const basePrompt = [{
         name: 'choice',
         message: 'What would you like to do?',
@@ -144,6 +168,9 @@ function stringNotEmptyValidator(errMsg) {
         }, {
             name: 'Update Employee Role',
             value: updateEmployeeRole
+        }, {
+            name: 'Update Employee Manager',
+            value: updateEmployeeManager
         }, {
             name: 'View All Roles',
             value: viewRoles
