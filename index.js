@@ -13,6 +13,23 @@ const inquirer = require('inquirer');
         return db.readDepartments();
     }
 
+    async function addDepartment() {
+        const addDeptPrompt = [{
+            name: 'name',
+            message: 'What is the name of the department?',
+            type: 'input',
+            validator: function(value) {
+                if (value == undefined || value == null || value.trim().length == 0) {
+                    return 'Department name is required';
+                }
+                return true;
+            }
+        }];
+
+        const { name } = await inquirer.prompt(addDeptPrompt);
+        return db.insertDepartment(name);
+    }
+
     function viewRoles() {
         return db.readRoles();
     }
@@ -34,6 +51,9 @@ const inquirer = require('inquirer');
         }, {
             name: 'View All Departments',
             value: viewDepartments
+        }, {
+            name: 'Add Department',
+            value: addDepartment
         }, {
             name: 'Exit',
             value: exit
