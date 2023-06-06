@@ -111,6 +111,26 @@ function stringNotEmptyValidator(errMsg) {
         return db.insertEmployee(firstName, lastName, roleId, managerId);
     }
 
+    async function updateEmployeeRole() {
+        const employeesP = db.readEmployees();
+        const rolesP = db.readRoles();
+        const [employees, roles] = (await Promise.all([employeesP, rolesP])).map(rs => rs.getNameIdMapping());
+        const updateEmployeeRolePrompt = [{
+            name: 'employeeId',
+            message: 'Which employee\'s role do you want to update?',
+            type: 'list',
+            choices: employees
+        }, {
+            name: 'roleId',
+            message: 'Which role do you want to assign the selected employee?',
+            type: 'list',
+            choices: roles
+        }];
+
+        const { employeeId, roleId } = await inquirer.prompt(updateEmployeeRolePrompt);
+        return db.updateEmployeeRole(employeeId, roleId);
+    }
+
     const basePrompt = [{
         name: 'choice',
         message: 'What would you like to do?',
@@ -121,6 +141,9 @@ function stringNotEmptyValidator(errMsg) {
         }, {
             name: 'Add Employee',
             value: addEmployee
+        }, {
+            name: 'Update Employee Role',
+            value: updateEmployeeRole
         }, {
             name: 'View All Roles',
             value: viewRoles
@@ -144,12 +167,4 @@ function stringNotEmptyValidator(errMsg) {
         const userInput = await inquirer.prompt(basePrompt);
         await userInput.choice();
     }
-
-    // await db.readRoles();
-    // await db.readEmployees();
-    // await db.insertDepartment('Service');
-    // await db.insertRole('Customer Service', '80000', 5);
-    // await db.insertEmployee('Sam', 'Kash', 9, 3);
-    // await db.updateEmployeeRole(9, 1);
-    // await db.close();
 })()
