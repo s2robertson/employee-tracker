@@ -118,11 +118,30 @@ async function updateEmployeeManager(db) {
     return db.updateEmployeeManager(employeeId, managerId);
 }
 
+async function deleteEmployee(db) {
+    const employees = (await db.readEmployees()).getNameIdMapping();
+    const deleteEmployeePrompt = [{
+        name: 'employeeId',
+        message: 'Delete which employee?',
+        type: 'list',
+        choices: employees
+    }];
+
+    const { employeeId } = await inquirer.prompt(deleteEmployeePrompt);
+    const wasDeleted = await db.deleteEmployee(employeeId);
+    if (wasDeleted) {
+        console.log('Employee deleted');
+    } else {
+        console.log('Employee could not be deleted.  Are other employees managed by them?');
+    }
+}
+
 module.exports = {
     viewEmployees,
     viewEmployeesByManager,
     viewEmployeesByDepartment,
     addEmployee,
     updateEmployeeRole,
-    updateEmployeeManager
+    updateEmployeeManager,
+    deleteEmployee
 }

@@ -24,7 +24,7 @@ module.exports = (async function() {
 
         async deleteDepartment(deptId) {
             try {
-                const result = await conn.execute('DELETE FROM department WHERE id = ?', [deptId]);
+                const [result] = await conn.execute('DELETE FROM department WHERE id = ?', [deptId]);
                 return result.affectedRows > 0;
             } catch (err) {
                 return false;
@@ -99,6 +99,15 @@ module.exports = (async function() {
         async updateEmployeeManager(employeeId, managerId) {
             const [result] = await conn.execute('UPDATE employee SET manager_id = ? WHERE id = ?', [managerId, employeeId]);
             return result.affectedRows > 0;
+        },
+
+        async deleteEmployee(employeeId) {
+            try {
+                const [result] = await conn.execute('DELETE FROM employee WHERE id = ?', [employeeId]);
+                return result.affectedRows > 0;
+            } catch (err) {
+                return false;
+            }
         },
 
         close() {

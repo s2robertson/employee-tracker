@@ -22,7 +22,8 @@ const inquirer = require('inquirer');
         viewEmployeesByDepartment,
         addEmployee,
         updateEmployeeRole,
-        updateEmployeeManager
+        updateEmployeeManager,
+        deleteEmployee
     } = require('./cli/employees');
 
     async function exit(db) {
@@ -52,6 +53,9 @@ const inquirer = require('inquirer');
         }, {
             name: 'View Employees By Department',
             value: viewEmployeesByDepartment
+        }, {
+            name: 'Delete Employee',
+            value: deleteEmployee
         }, {
             name: 'View All Roles',
             value: viewRoles
