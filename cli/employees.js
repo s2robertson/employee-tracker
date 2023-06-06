@@ -39,6 +39,9 @@ async function viewEmployeesByDepartment(db) {
     console.log(employees.toString());
 }
 
+const firstNameNotEmptyValidator = stringNotEmptyValidator('First name is required');
+const lastNameNotEmptyValidator = stringNotEmptyValidator('Last name is required');
+
 async function addEmployee(db) {
     const rolesP = db.readRoles();
     const managersP = db.readEmployeeNames();
@@ -52,12 +55,12 @@ async function addEmployee(db) {
         name: 'firstName',
         message: 'What is the employee\'s first name?',
         type: 'input',
-        validator: stringNotEmptyValidator('First name is required')
+        validator: firstNameNotEmptyValidator
     }, {
         name: 'lastName',
         message: 'What is the employee\'s last name?',
         type: 'input',
-        validator: stringNotEmptyValidator('Last name is required')
+        validator: lastNameNotEmptyValidator
     }, {
         name: 'roleId',
         message: 'What is the employee\'s role?',

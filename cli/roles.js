@@ -6,26 +6,30 @@ async function viewRoles(db) {
     console.log(roles.toString());
 }
 
+const titleNotEmptyValidator = stringNotEmptyValidator('Role name is required');
 const salaryNotEmptyValidator = stringNotEmptyValidator('Role salary is required');
+const salaryRegExp = /^\d{1, 10}$/;
+function salaryValidator(value) {
+    const notEmptyCheck = salaryNotEmptyValidator(value);
+    if (notEmptyCheck !== true) {
+        return notEmptyCheck;
+    }
+    const reCheck = salaryRegExp.test(value.trim());
+    return reCheck || 'Salary must be 1-10 digits, with no spaces';
+}
+
 async function addRole(db) {
     const departments = (await db.readDepartments()).getNameIdMapping();
     const addRolePrompt = [{
         name: 'title',
         message: 'What is the name of the role?',
         type: 'input',
-        validator: stringNotEmptyValidator('Role name is required')
+        validator: titleNotEmptyValidator
     }, {
         name: 'salary',
         message: 'What is the salary of the role?',
         type: 'input',
-        validator: function(value) {
-            const notEmptyCheck = salaryNotEmptyValidator(value);
-            if (notEmptyCheck !== true) {
-                return notEmptyCheck;
-            }
-            const reCheck = /^\d{1, 10}$/.test(value.trim());
-            return reCheck || 'Salary must be 1-10 digits, with no spaces';
-        }
+        validator: salaryValidator
     }, {
         name: 'departmentId',
         message: 'What department does the role belong to?',

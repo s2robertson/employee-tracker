@@ -6,12 +6,14 @@ async function viewDepartments(db) {
     console.log(departments.toString());
 }
 
+const departmentNameNotEmptyValidator = stringNotEmptyValidator('Department name is required');
+
 async function addDepartment(db) {
     const addDeptPrompt = [{
         name: 'name',
         message: 'What is the name of the department?',
         type: 'input',
-        validator: stringNotEmptyValidator('Department name is required')
+        validator: departmentNameNotEmptyValidator
     }];
 
     const { name } = await inquirer.prompt(addDeptPrompt);

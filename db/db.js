@@ -86,6 +86,7 @@ module.exports = (async function() {
                     whereClause += 'manager.id IS NULL';
                 }
             }
+            
             const query = 'SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary, '
                 + 'CONCAT(manager.first_name, " ", manager.last_name) AS manager FROM employee e '
                 + 'LEFT JOIN employee manager ON e.manager_id = manager.id '
@@ -97,6 +98,7 @@ module.exports = (async function() {
             return rs;
         },
 
+        // this is a simpler version of readEmployees for when you only need the names and id
         async readEmployeeNames() {
             const query = 'SELECT id, first_name, last_name FROM employee';
             const [rows, fields] = await conn.query(query);
