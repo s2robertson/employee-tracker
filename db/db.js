@@ -16,6 +16,12 @@ module.exports = (async function() {
             console.log(rs.toString());
         },
 
+        async insertDepartment(deptName) {
+            const [result] = await conn.execute('INSERT INTO department (name) VALUES (?)', [deptName]);
+            // could also return insertId
+            return result.affectedRows > 0;
+        },
+
         async readRoles() {
             const query = 'SELECT r.id, r.title, d.name AS department, r.salary FROM role r '
                 + 'INNER JOIN department d ON r.department_id = d.id'

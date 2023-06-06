@@ -4,8 +4,9 @@ require('dotenv').config();
 (async function() {
     const db = await require('./db/db');
 
-    await db.readDepartments();
-    await db.readRoles();
-    await db.readEmployees();
+    // await db.readDepartments();
+    // await db.readRoles();
+    // await db.readEmployees();
+    await db.insertDepartment('Service');
     await db.close();
 })()
