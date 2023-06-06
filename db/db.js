@@ -17,7 +17,7 @@ module.exports = (async function() {
         },
 
         async readRoles() {
-            const [rows, fields] = await conn.query('SELECT * FROM role');
+            const [rows, fields] = await conn.query('SELECT r.id, r.title, d.name AS department, r.salary FROM role r INNER JOIN department d ON r.department_id = d.id');
             const rs = new ResultSet(rows, fields);
             console.log(rs.toString());
         },
