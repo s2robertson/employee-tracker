@@ -36,13 +36,33 @@ module.exports = (async function() {
             return result.affectedRows > 0;
         },
 
-        async readEmployees() {
+        async readEmployees({ departmentId, managerId } = {}) {
+            let whereClause = '';
+            let params = [];
+            if (departmentId) {
+                whereClause = ' WHERE d.id = ?';
+                params.push(departmentId);
+            }
+            if (managerId !== undefined) {
+                if (!whereClause) {
+                    whereClause = ' WHERE ';
+                } else {
+                    whereClause += ' AND ';
+                }
+                if (managerId !== null) {
+                    whereClause += 'manager.id = ?';
+                    params.push(managerId);
+                } else {
+                    whereClause += 'manager.id IS NULL';
+                }
+            }
             const query = 'SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary, '
                 + 'CONCAT(manager.first_name, " ", manager.last_name) AS manager FROM employee e '
                 + 'LEFT JOIN employee manager ON e.manager_id = manager.id '
                 + 'INNER JOIN role r ON e.role_id = r.id '
-                + 'INNER JOIN department d ON r.department_id = d.id';
-            const [rows, fields] = await conn.query(query);
+                + 'INNER JOIN department d ON r.department_id = d.id'
+                + whereClause;
+            const [rows, fields] = await conn.execute(query, params);
             const rs = new EmployeeResultSet(rows, fields);
             return rs;
         },

@@ -76,6 +76,25 @@ function stringNotEmptyValidator(errMsg) {
         console.log(employees.toString());
     }
 
+    async function viewEmployeesByManager() {
+        const managers = (await db.readEmployees()).getNameIdMapping();
+        // search for employees with no manager
+        managers.unshift({
+            name: 'None',
+            value: null
+        });
+        const viewEmployeesByManagerPrompt = [{
+            name: 'managerId',
+            message: 'View Employees With Manager:',
+            type: 'list',
+            choices: managers
+        }];
+
+        const options = await inquirer.prompt(viewEmployeesByManagerPrompt);
+        const employees = await db.readEmployees(options);
+        console.log(employees.toString());
+    }
+
     async function addEmployee() {
         const rolesP = db.readRoles();
         const managersP = db.readEmployees();
@@ -171,6 +190,9 @@ function stringNotEmptyValidator(errMsg) {
         }, {
             name: 'Update Employee Manager',
             value: updateEmployeeManager
+        }, {
+            name: 'View Employees By Manager',
+            value: viewEmployeesByManager
         }, {
             name: 'View All Roles',
             value: viewRoles
