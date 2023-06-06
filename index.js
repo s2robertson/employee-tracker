@@ -17,11 +17,18 @@ const inquirer = require('inquirer');
         return db.readRoles();
     }
 
+    function viewEmployees() {
+        return db.readEmployees();
+    }
+
     const basePrompt = [{
         name: 'choice',
         message: 'What would you like to do?',
         type: 'list',
         choices: [{
+            name: 'View All Employees',
+            value: viewEmployees
+        }, {
             name: 'View All Roles',
             value: viewRoles
         }, {
