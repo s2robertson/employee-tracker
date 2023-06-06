@@ -7,7 +7,8 @@ const inquirer = require('inquirer');
     const {
         viewDepartments,
         addDepartment,
-        deleteDepartment
+        deleteDepartment,
+        viewDepartmentBudgetUtilization
     } = require('./cli/departments');
     
     const {
@@ -74,6 +75,9 @@ const inquirer = require('inquirer');
         }, {
             name: 'Delete Department',
             value: deleteDepartment
+        }, {
+            name: 'View Budget Utilization By Department',
+            value: viewDepartmentBudgetUtilization
         }, {
             name: 'Exit',
             value: exit

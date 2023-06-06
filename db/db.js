@@ -31,6 +31,16 @@ module.exports = (async function() {
             }
         },
 
+        async viewDepartmentBudgetUtilization(deptId) {
+            const query = 'SELECT SUM(r.salary) AS total FROM role r INNER JOIN employee e ON e.role_id = r.id '
+                + 'INNER JOIN department d ON r.department_id = d.id WHERE d.id = ?';
+            const [rows] = await conn.execute(query, [deptId]);
+            if (rows.length > 0 && rows[0].total !== null) {
+                return rows[0].total;
+            }
+            return 0;
+        },
+
         async readRoles() {
             const query = 'SELECT r.id, r.title, d.name AS department, r.salary FROM role r '
                 + 'INNER JOIN department d ON r.department_id = d.id'

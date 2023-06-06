@@ -36,8 +36,23 @@ async function deleteDepartment(db) {
     }
 }
 
+async function viewDepartmentBudgetUtilization(db) {
+    const departments = (await db.readDepartments()).getNameIdMapping();
+    const viewBudgetPrompt = [{
+        name: 'departmentId',
+        message: 'View budget utilization for which department?',
+        type: 'list',
+        choices: departments
+    }];
+
+    const { departmentId } = await inquirer.prompt(viewBudgetPrompt);
+    const budgetUtilization = await db.viewDepartmentBudgetUtilization(departmentId);
+    console.log(`Total budget utilization: ${budgetUtilization}`);
+}
+
 module.exports = {
     viewDepartments,
     addDepartment,
-    deleteDepartment
+    deleteDepartment,
+    viewDepartmentBudgetUtilization
 }
