@@ -9,6 +9,7 @@ require('dotenv').config();
     // await db.readEmployees();
     // await db.insertDepartment('Service');
     // await db.insertRole('Customer Service', '80000', 5);
-    await db.insertEmployee('Sam', 'Kash', 9, 3);
+    // await db.insertEmployee('Sam', 'Kash', 9, 3);
+    await db.updateEmployeeRole(9, 1);
     await db.close();
 })()

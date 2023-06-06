@@ -53,6 +53,11 @@ module.exports = (async function() {
             return result.affectedRows > 0;
         },
 
+        async updateEmployeeRole(employeeId, roleId) {
+            const [result] = await conn.execute('UPDATE employee SET role_id = ? WHERE id = ?', [roleId, employeeId]);
+            return result.affectedRows > 0;
+        },
+
         close() {
             return conn.end();
         }
