@@ -35,6 +35,24 @@ function stringNotEmptyValidator(errMsg) {
         return db.insertDepartment(name);
     }
 
+    async function deleteDepartment() {
+        const departments = (await db.readDepartments()).getNameIdMapping();
+        const deleteDepartmentPrompt = [{
+            name: 'departmentId',
+            message: 'Delete which department?',
+            type: 'list',
+            choices: departments
+        }];
+
+        const { departmentId } = await inquirer.prompt(deleteDepartmentPrompt);
+        const wasDeleted = await db.deleteDepartment(departmentId);
+        if (wasDeleted) {
+            console.log('Department deleted');
+        } else {
+            console.log('Department could not be deleted (are there roles connected to it?)');
+        }
+    }
+
     async function viewRoles() {
         const roles = await db.readRoles();
         console.log(roles.toString());
@@ -85,7 +103,7 @@ function stringNotEmptyValidator(errMsg) {
         });
         const viewEmployeesByManagerPrompt = [{
             name: 'managerId',
-            message: 'View Employees With Manager:',
+            message: 'View employees with which manager?',
             type: 'list',
             choices: managers
         }];
@@ -99,7 +117,7 @@ function stringNotEmptyValidator(errMsg) {
         const departments = (await db.readDepartments()).getNameIdMapping();
         const viewEmployeesByDepartmentPrompt = [{
             name: 'departmentId',
-            message: 'View Employees From Department:',
+            message: 'View employees from which department?',
             type: 'list',
             choices: departments
         }];
@@ -222,6 +240,9 @@ function stringNotEmptyValidator(errMsg) {
         }, {
             name: 'Add Department',
             value: addDepartment
+        }, {
+            name: 'Delete Department',
+            value: deleteDepartment
         }, {
             name: 'Exit',
             value: exit

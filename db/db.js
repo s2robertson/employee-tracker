@@ -22,6 +22,15 @@ module.exports = (async function() {
             return result.affectedRows > 0;
         },
 
+        async deleteDepartment(deptId) {
+            try {
+                const result = await conn.execute('DELETE FROM department WHERE id = ?', [deptId]);
+                return result.affectedRows > 0;
+            } catch (err) {
+                return false;
+            }
+        },
+
         async readRoles() {
             const query = 'SELECT r.id, r.title, d.name AS department, r.salary FROM role r '
                 + 'INNER JOIN department d ON r.department_id = d.id'
