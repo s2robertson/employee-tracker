@@ -13,7 +13,7 @@ module.exports = (async function() {
         async readDepartments() {
             const [rows, fields] = await conn.query('SELECT * FROM department');
             const rs = new ResultSet(rows, fields);
-            console.log(rs.toString());
+            return rs;
         },
 
         async insertDepartment(deptName) {
@@ -27,7 +27,7 @@ module.exports = (async function() {
                 + 'INNER JOIN department d ON r.department_id = d.id'
             const [rows, fields] = await conn.query(query);
             const rs = new ResultSet(rows, fields);
-            console.log(rs.toString());
+            return rs;
         },
 
         async insertRole(title, salary, departmentId) {
@@ -44,7 +44,7 @@ module.exports = (async function() {
                 + 'INNER JOIN department d ON r.department_id = d.id';
             const [rows, fields] = await conn.query(query);
             const rs = new ResultSet(rows, fields);
-            console.log(rs.toString());
+            return rs;
         },
 
         async insertEmployee(firstName, lastName, roleId, managerId) {

@@ -9,8 +9,9 @@ const inquirer = require('inquirer');
         process.exit();
     }
 
-    function viewDepartments() {
-        return db.readDepartments();
+    async function viewDepartments() {
+        const departments = await db.readDepartments();
+        console.log(departments.toString());
     }
 
     async function addDepartment() {
@@ -30,12 +31,14 @@ const inquirer = require('inquirer');
         return db.insertDepartment(name);
     }
 
-    function viewRoles() {
-        return db.readRoles();
+    async function viewRoles() {
+        const roles = await db.readRoles();
+        console.log(roles.toString());
     }
 
-    function viewEmployees() {
-        return db.readEmployees();
+    async function viewEmployees() {
+        const employees = await db.readEmployees();
+        console.log(employees.toString());
     }
 
     const basePrompt = [{
