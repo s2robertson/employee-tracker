@@ -32,7 +32,7 @@ async function deleteDepartment(db) {
     if (wasDeleted) {
         console.log('Department deleted');
     } else {
-        console.log('Department could not be deleted (are there roles connected to it?)');
+        console.log('Department could not be deleted.  Are there roles connected to it?');
     }
 }
 
