@@ -1,4 +1,5 @@
 const mysql = require('mysql2/promise');
+const ResultSet = require('./resultSet');
 
 module.exports = (async function() {
     const conn = await mysql.createConnection({
@@ -10,21 +11,21 @@ module.exports = (async function() {
 
     return {
         async readDepartments() {
-            const [results, fields] = await conn.query('SELECT * FROM department');
-            console.log(results);
-            console.log(fields);
+            const [rows, fields] = await conn.query('SELECT * FROM department');
+            const rs = new ResultSet(rows, fields);
+            console.log(rs.toString());
         },
 
         async readRoles() {
-            const [results, fields] = await conn.query('SELECT * FROM role');
-            console.log(results);
-            console.log(fields);
+            const [rows, fields] = await conn.query('SELECT * FROM role');
+            const rs = new ResultSet(rows, fields);
+            console.log(rs.toString());
         },
 
         async readEmployees() {
-            const [results, fields] = await conn.query('SELECT * FROM employee');
-            console.log(results);
-            console.log(fields);
+            const [rows, fields] = await conn.query('SELECT * FROM employee');
+            const rs = new ResultSet(rows, fields);
+            console.log(rs.toString());
         },
 
         close() {
