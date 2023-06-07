@@ -21,6 +21,7 @@ async function viewEmployeesByManager(db) {
     }];
 
     const options = await inquirer.prompt(viewEmployeesByManagerPrompt);
+    console.log('');
     const employees = await db.readEmployees(options);
     console.log(employees.toString());
 }
@@ -35,6 +36,7 @@ async function viewEmployeesByDepartment(db) {
     }];
 
     const options = await inquirer.prompt(viewEmployeesByDepartmentPrompt);
+    console.log('');
     const employees = await db.readEmployees(options);
     console.log(employees.toString());
 }
@@ -74,7 +76,13 @@ async function addEmployee(db) {
     }];
 
     const { firstName, lastName, roleId, managerId } = await inquirer.prompt(addEmployeePrompt);
-    return db.insertEmployee(firstName, lastName, roleId, managerId);
+    const wasAdded = await db.insertEmployee(firstName, lastName, roleId, managerId);
+    if (wasAdded) {
+        console.log('Employee added');
+    } else {
+        console.log('*** Insert failed ***');
+    }
+    console.log('');
 }
 
 async function updateEmployeeRole(db) {
@@ -94,7 +102,13 @@ async function updateEmployeeRole(db) {
     }];
 
     const { employeeId, roleId } = await inquirer.prompt(updateEmployeeRolePrompt);
-    return db.updateEmployeeRole(employeeId, roleId);
+    const wasUpdated = await db.updateEmployeeRole(employeeId, roleId);
+    if (wasUpdated) {
+        console.log('Employee role updated');
+    } else {
+        console.log('*** Update failed ***');
+    }
+    console.log('');
 }
 
 async function updateEmployeeManager(db) {
@@ -118,7 +132,13 @@ async function updateEmployeeManager(db) {
     }];
 
     const { employeeId, managerId } = await inquirer.prompt(updateEmployeeManagerPrompt);
-    return db.updateEmployeeManager(employeeId, managerId);
+    const wasUpdated = await db.updateEmployeeManager(employeeId, managerId);
+    if (wasUpdated) {
+        console.log('Employee role updated');
+    } else {
+        console.log('*** Update failed ***');
+    }
+    console.log('');
 }
 
 async function deleteEmployee(db) {
@@ -137,6 +157,7 @@ async function deleteEmployee(db) {
     } else {
         console.log('Employee could not be deleted.  Are other employees managed by them?');
     }
+    console.log('');
 }
 
 module.exports = {

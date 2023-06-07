@@ -38,7 +38,13 @@ async function addRole(db) {
     }];
 
     const { title, salary, departmentId } = await inquirer.prompt(addRolePrompt);
-    return db.insertRole(title, salary, departmentId);
+    const wasAdded = await db.insertRole(title, salary, departmentId);
+    if (wasAdded) {
+        console.log('Role added');
+    } else {
+        console.log('*** Insert failed ***');
+    }
+    console.log('');
 }
 
 async function deleteRole(db) {
@@ -57,6 +63,7 @@ async function deleteRole(db) {
     } else {
         console.log('Role could not be deleted.  Are there employees assigned to it?');
     }
+    console.log('');
 }
 
 module.exports = {

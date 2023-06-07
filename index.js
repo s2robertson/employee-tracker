@@ -87,6 +87,7 @@ const inquirer = require('inquirer');
     // main event loop
     while (true) {
         const userInput = await inquirer.prompt(basePrompt);
+        console.log('');
         await userInput.choice(db);
     }
 })()

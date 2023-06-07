@@ -17,7 +17,13 @@ async function addDepartment(db) {
     }];
 
     const { name } = await inquirer.prompt(addDeptPrompt);
-    return db.insertDepartment(name);
+    const wasAdded = await db.insertDepartment(name);
+    if (wasAdded) {
+        console.log('Department added');
+    } else {
+        console.log('*** Insert failed ***');
+    }
+    console.log('');
 }
 
 async function deleteDepartment(db) {
@@ -36,6 +42,7 @@ async function deleteDepartment(db) {
     } else {
         console.log('Department could not be deleted.  Are there roles connected to it?');
     }
+    console.log('');
 }
 
 async function viewDepartmentBudgetUtilization(db) {
@@ -50,6 +57,7 @@ async function viewDepartmentBudgetUtilization(db) {
     const { departmentId } = await inquirer.prompt(viewBudgetPrompt);
     const budgetUtilization = await db.viewDepartmentBudgetUtilization(departmentId);
     console.log(`Total budget utilization: ${budgetUtilization}`);
+    console.log('');
 }
 
 module.exports = {
